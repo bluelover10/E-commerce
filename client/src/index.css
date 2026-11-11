@@ -1,0 +1,1337 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Syne", system-ui, sans-serif;
+  --font-body: "DM Sans", system-ui, sans-serif;
+  --color-noire-bg: #f7f5f0;
+  --color-noire-surface: #ffffff;
+  --color-noire-ink: #0c0c0e;
+  --color-noire-muted: #6b6560;
+  --color-noire-border: #e8e4dc;
+  --color-noire-accent: #c9a962;
+  --color-noire-accent-hover: #b8944f;
+  --color-noire-teal: #1a6b5c;
+}
+
+:root {
+  --bg: #f7f5f0;
+  --surface: #ffffff;
+  --surface-elevated: rgba(255, 255, 255, 0.72);
+  --ink: #0c0c0e;
+  --muted: #6b6560;
+  --border: #e8e4dc;
+  --accent: #c9a962;
+  --accent-hover: #b8944f;
+  --teal: #1a6b5c;
+  --glow: rgba(201, 169, 98, 0.25);
+  --shadow-sm: 0 1px 2px rgba(12, 12, 14, 0.04);
+  --shadow-md: 0 8px 30px rgba(12, 12, 14, 0.08);
+  --shadow-lg: 0 24px 60px rgba(12, 12, 14, 0.12);
+  --nav-height: 72px;
+}
+
+/* Light-only theme. The former dark variant (data-theme="dark") and its
+   toggle were removed by design — the storefront now has ONE appearance. */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  color-scheme: light;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.35s ease, color 0.35s ease;
+}
+
+#root {
+  width: 100%;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  color: var(--ink);
+  letter-spacing: -0.02em;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--ink);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted);
+}
+
+@layer components {
+  .container-narrow {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .glass-nav {
+    background: var(--surface-elevated);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition-all duration-300;
+    background: var(--ink);
+    color: var(--bg);
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+  .btn-primary:disabled {
+    opacity: 0.5;
+    transform: none;
+    cursor: not-allowed;
+  }
+
+  .btn-accent {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition-all duration-300;
+    background: var(--accent);
+    color: var(--ink);
+  }
+  .btn-accent:hover {
+    background: var(--accent-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px var(--glow);
+  }
+
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border px-6 py-3 text-sm font-semibold transition-all duration-300;
+    border-color: var(--border);
+    color: var(--ink);
+    background: transparent;
+  }
+  .btn-outline:hover {
+    border-color: var(--ink);
+    transform: translateY(-2px);
+  }
+
+  .card-surface {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 1.25rem;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow 0.3s ease, transform 0.3s ease, border-color 0.3s ease;
+  }
+  .card-surface:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-4px);
+    border-color: color-mix(in srgb, var(--accent) 40%, var(--border));
+  }
+
+  .input-field {
+    @apply w-full rounded-xl px-4 py-3 text-sm outline-none transition-all duration-200;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--ink);
+  }
+  .input-field:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--glow);
+  }
+  .input-field:hover:not(:disabled):not(:focus) {
+    border-color: color-mix(in srgb, var(--accent) 40%, var(--border));
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 10%, transparent);
+  }
+  .input-field::placeholder {
+    color: var(--muted);
+  }
+
+  /* Native <option> popups for site selects — follow the site theme so the
+     popup text always contrasts with the popup background. */
+  .input-field option {
+    background-color: var(--surface);
+    color: var(--ink);
+  }
+
+  .badge {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium;
+    background: color-mix(in srgb, var(--accent) 20%, transparent);
+    color: var(--ink);
+  }
+
+  .section-title {
+    font-family: var(--font-display);
+    @apply text-3xl font-bold tracking-tight sm:text-4xl;
+    color: var(--ink);
+  }
+
+  .text-muted {
+    color: var(--muted);
+  }
+
+  .gradient-mesh {
+    background:
+      radial-gradient(ellipse 80% 50% at 20% 40%, rgba(201, 169, 98, 0.15), transparent),
+      radial-gradient(ellipse 60% 40% at 80% 20%, rgba(26, 107, 92, 0.12), transparent),
+      radial-gradient(ellipse 50% 60% at 50% 100%, rgba(12, 12, 14, 0.05), transparent),
+      var(--bg);
+  }
+
+}
+
+/* Animations */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.95);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.3);
+    opacity: 0;
+  }
+}
+
+.animate-fade-up {
+  /* fill: backwards — the end keyframe equals the natural state, so the
+     animation must not retain a transform after finishing: a retained
+     transform would turn position:fixed dialogs inside the page into
+     content-anchored overlays instead of viewport overlays. */
+  animation: fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.5s ease forwards;
+}
+
+.animate-marquee {
+  animation: marquee 30s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee,
+  .animate-float {
+    animation: none;
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--border) 25%,
+    color-mix(in srgb, var(--border) 50%, var(--surface)) 50%,
+    var(--border) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 0.75rem;
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.stagger-1 {
+  animation-delay: 0.1s;
+}
+.stagger-2 {
+  animation-delay: 0.2s;
+}
+.stagger-3 {
+  animation-delay: 0.3s;
+}
+.stagger-4 {
+  animation-delay: 0.4s;
+}
+
+/* ─── Admin Command Center ──────────────────────────────────────────────────
+   Light-only admin design combining GLASSMORPHISM (translucent blurred
+   surfaces: sidebar, header, modals, tooltips) with NEUMORPHISM (soft
+   raised cards/buttons, gentle inset fields/tiles). One token system
+   drives every admin page — pages must not hardcode colors.
+   --dash-accent   = fills & focus (pair with --dash-on-accent text)
+   --dash-accent-2 = accent text & links (AA-safe on the light surfaces)
+   --dash-inset    = neumorphic pressed shadow (inputs, tiles, chips)
+   --dash-glass-bg = translucent surface for blurred glass elements        */
+.admin-shell {
+  --dash-bg: #f8fafc;
+  --dash-surface: #ffffff;
+  --dash-surface-2: #f1f5f9;
+  --dash-border: #e2e8f0;
+  --dash-border-strong: #cbd5e1;
+  --dash-text: #1e293b;
+  --dash-muted: #64748b;
+  --dash-accent: #4f46e5;
+  --dash-accent-hover: #4338ca;
+  --dash-accent-2: #4f46e5;
+  --dash-on-accent: #ffffff;
+  --dash-glow: rgba(79, 70, 229, 0.12);
+  --dash-accent-tint: rgba(79, 70, 229, 0.08);
+  --dash-accent-border: rgba(79, 70, 229, 0.32);
+  --dash-hover: rgba(15, 23, 42, 0.045);
+  --dash-tile-bg: #f8fafc;
+  --dash-thead-bg: #f8fafc;
+  --dash-row-hover: rgba(79, 70, 229, 0.05);
+  --dash-ring: rgba(79, 70, 229, 0.45);
+  --dash-scrollbar: rgba(15, 23, 42, 0.22);
+  --dash-scrollbar-hover: rgba(15, 23, 42, 0.35);
+  --dash-inset: inset 2px 2px 5px rgba(15, 23, 42, 0.05), inset -2px -2px 5px rgba(255, 255, 255, 0.85);
+  --dash-panel-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.04),
+    0 14px 34px -14px rgba(15, 23, 42, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  --dash-float-shadow: 0 24px 60px -12px rgba(15, 23, 42, 0.25);
+  --dash-header-bg: rgba(255, 255, 255, 0.78);
+  --dash-glass-bg: rgba(255, 255, 255, 0.72);
+  --dash-tooltip-bg: rgba(255, 255, 255, 0.88);
+  --dash-modal-bg: rgba(255, 255, 255, 0.92);
+  --dash-overlay: rgba(15, 23, 42, 0.45);
+  --dash-skeleton: rgba(15, 23, 42, 0.06);
+  --dash-skeleton-sheen: rgba(255, 255, 255, 0.65);
+  --dash-success-ink: #166534; --dash-success-soft: rgba(22, 163, 74, 0.1);
+  --dash-warning-ink: #92400e; --dash-warning-soft: rgba(217, 119, 6, 0.1);
+  --dash-danger-ink: #991b1b;  --dash-danger-soft: rgba(220, 38, 38, 0.08);
+  --dash-info-ink: #075985;    --dash-info-soft: rgba(2, 132, 199, 0.09);
+  min-height: 100svh;
+  /* Balanced ambient light behind the glass surfaces — barely-there indigo
+     and teal washes over the clean #F8FAFC base (no heavy gradients). */
+  background:
+    radial-gradient(1100px 460px at 82% -140px, rgba(79, 70, 229, 0.07), transparent 70%),
+    radial-gradient(900px 420px at -8% 108%, rgba(13, 148, 136, 0.05), transparent 70%),
+    var(--dash-bg);
+  color: var(--dash-text);
+  color-scheme: light;
+  scrollbar-color: var(--dash-scrollbar) transparent;
+}
+
+/* Glass sidebar — desktop only (where it sits beside content). The mobile
+   drawer keeps its opaque surface so page content never shows through. */
+@media (min-width: 1024px) {
+  .admin-sidebar {
+    background: var(--dash-glass-bg);
+    backdrop-filter: blur(14px) saturate(1.4);
+    -webkit-backdrop-filter: blur(14px) saturate(1.4);
+    box-shadow: 12px 0 32px -18px rgba(15, 23, 42, 0.16);
+  }
+}
+
+.admin-panel {
+  background: var(--dash-surface);
+  border: 1px solid var(--dash-border);
+  border-radius: 1rem;
+  box-shadow: var(--dash-panel-shadow);
+}
+
+.admin-stat-glow {
+  position: relative;
+  overflow: hidden;
+}
+.admin-stat-glow::after {
+  content: "";
+  position: absolute;
+  top: -45%;
+  right: -25%;
+  width: 140px;
+  height: 140px;
+  background: radial-gradient(circle, var(--dash-glow), transparent 70%);
+  pointer-events: none;
+}
+
+.admin-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 0.875rem;
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--dash-muted);
+  transition: color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+.admin-nav-link:hover {
+  color: var(--dash-text);
+  background: var(--dash-hover);
+}
+.admin-nav-link.active {
+  color: var(--dash-accent-2);
+  background: var(--dash-accent-tint);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.65),
+    0 2px 8px -2px var(--dash-glow);
+}
+
+/* Admin primitives — one consistent system for every admin page */
+.admin-page-head {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.admin-page-head h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--dash-text);
+}
+.admin-page-head p {
+  font-size: 0.875rem;
+  color: var(--dash-muted);
+}
+
+.admin-table {
+  width: 100%;
+  text-align: left;
+  font-size: 0.875rem;
+  border-collapse: collapse;
+}
+.admin-table thead th {
+  padding: 0.75rem 1rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--dash-muted);
+  background: var(--dash-thead-bg);
+  border-bottom: 1px solid var(--dash-border);
+  white-space: nowrap;
+}
+.admin-table tbody td {
+  padding: 0.8rem 1rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--dash-border) 55%, transparent);
+  vertical-align: middle;
+}
+.admin-table tbody tr {
+  transition: background 0.15s ease;
+}
+.admin-table tbody tr:hover {
+  background: var(--dash-row-hover);
+}
+.admin-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.admin-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.65rem;
+  border-radius: 9999px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: capitalize;
+  white-space: nowrap;
+  border: 1px solid transparent;
+}
+.admin-chip::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  border-radius: 9999px;
+  background: currentColor;
+}
+.admin-chip.neutral { color: var(--dash-accent-2); background: var(--dash-accent-tint); border-color: var(--dash-accent-border); }
+.admin-chip.info    { color: var(--dash-info-ink); background: var(--dash-info-soft); border-color: color-mix(in srgb, var(--dash-info-ink) 28%, transparent); }
+.admin-chip.success { color: var(--dash-success-ink); background: var(--dash-success-soft); border-color: color-mix(in srgb, var(--dash-success-ink) 28%, transparent); }
+.admin-chip.warning { color: var(--dash-warning-ink); background: var(--dash-warning-soft); border-color: color-mix(in srgb, var(--dash-warning-ink) 28%, transparent); }
+.admin-chip.danger  { color: var(--dash-danger-ink); background: var(--dash-danger-soft); border-color: color-mix(in srgb, var(--dash-danger-ink) 28%, transparent); }
+.admin-chip.muted   { color: var(--dash-muted); background: var(--dash-hover); border-color: var(--dash-border); }
+
+.admin-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--dash-on-accent);
+  background: var(--dash-accent);
+  border: 1px solid color-mix(in srgb, var(--dash-on-accent) 14%, transparent);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.1), 0 6px 14px -6px var(--dash-glow);
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+.admin-btn:hover { background: var(--dash-accent-hover); transform: translateY(-1px); box-shadow: 0 8px 18px -6px var(--dash-glow); }
+.admin-btn:disabled { opacity: 0.5; transform: none; }
+
+.admin-btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.85rem;
+  border-radius: 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--dash-text);
+  background: var(--dash-surface);
+  border: 1px solid var(--dash-border);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 2px 6px -2px rgba(15, 23, 42, 0.06);
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+.admin-btn-ghost:hover { background: var(--dash-accent-tint); border-color: var(--dash-accent-border); color: var(--dash-accent-2); }
+.admin-btn-ghost:disabled { opacity: 0.5; }
+
+.admin-btn-danger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.85rem;
+  border-radius: 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--dash-danger-ink);
+  background: var(--dash-danger-soft);
+  border: 1px solid color-mix(in srgb, var(--dash-danger-ink) 28%, transparent);
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+.admin-btn-danger:hover { background: color-mix(in srgb, var(--dash-danger-ink) 16%, transparent); border-color: color-mix(in srgb, var(--dash-danger-ink) 45%, transparent); }
+.admin-btn-danger:disabled { opacity: 0.5; }
+
+.admin-input,
+.admin-select {
+  width: 100%;
+  padding: 0.55rem 0.85rem;
+  border-radius: 0.875rem;
+  font-size: 0.875rem;
+  color: var(--dash-text);
+  background: var(--dash-tile-bg);
+  border: 1px solid var(--dash-border);
+  /* Gentle neumorphic inset — the field reads as pressed into the card */
+  box-shadow: var(--dash-inset);
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.admin-input::placeholder { color: var(--dash-muted); }
+.admin-input:disabled,
+.admin-select:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+/* Hover: everything is painted ON the field (border, background and a soft
+   ring via box-shadow) — box-shadow follows the border-radius, so the whole
+   hover effect hugs the control's curve on all four sides. Skipped while
+   focused so the strong focus border always wins. */
+.admin-input:hover:not(:disabled):not(:focus),
+.admin-select:hover:not(:disabled):not(:focus) {
+  border-color: var(--dash-accent-border);
+  background: var(--dash-surface);
+  box-shadow: var(--dash-inset), 0 0 0 3px color-mix(in srgb, var(--dash-accent) 10%, transparent);
+}
+.admin-input:focus,
+.admin-select:focus {
+  /* Belt & braces: some engines still draw a UA ring on plain :focus —
+     the rounded border + box-shadow ring below is the only indicator. */
+  outline: none;
+  border-color: var(--dash-accent-2);
+  box-shadow: var(--dash-inset), 0 0 0 3px color-mix(in srgb, var(--dash-accent) 25%, transparent);
+}
+
+/* Native <option> popups: the open list is drawn by the OS, so the popup
+   window itself cannot be rounded from CSS (a browser limitation, not a
+   styling bug — see the report). Chromium paints options from author
+   styles; other browsers follow color-scheme (light-only on .admin-shell).
+   Padding/radius apply where the browser honors them; surface + text
+   colors keep the popup readable everywhere. */
+.admin-select option {
+  background-color: var(--dash-surface-2);
+  color: var(--dash-text);
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+}
+.admin-select option:checked,
+.admin-select option:hover,
+.admin-select option:focus {
+  background-color: var(--dash-accent);
+  color: #ffffff;
+}
+
+/* ── Rounded dropdown picker (Chromium customizable <select>) ────────────
+   Chrome/Edge 135+ can render the open list as an author-styled panel in
+   the TOP LAYER — it is anchored to the trigger and can never be clipped
+   by cards, tables or modals, and its options are real boxes, so their
+   hover/checked bands are rounded and stay inside the panel. The trigger
+   keeps its neumorphic shape and gets a matching chevron (base-select
+   removes the native arrow). Browsers without support skip this whole
+   block and keep the native OS popup styled by the rules above. Pure
+   CSS — no JS, no dependencies. */
+@supports (appearance: base-select) {
+  .admin-select {
+    appearance: base-select;
+    padding-right: 2.25rem;
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='%2364748b' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 0.9rem;
+  }
+  .admin-select::picker(select) {
+    appearance: base-select;
+    margin-top: 0.25rem;
+    padding: 0.25rem;
+    border: 1px solid var(--dash-border-strong);
+    border-radius: 0.75rem;
+    background: var(--dash-modal-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: var(--dash-float-shadow);
+    color: var(--dash-text);
+    max-height: 24rem;
+    overflow-y: auto;
+  }
+  .admin-select option {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.5rem;
+    background-color: transparent;
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+  .admin-select option:hover,
+  .admin-select option:focus {
+    background-color: var(--dash-accent-tint);
+    color: var(--dash-accent-2);
+  }
+  .admin-select option:checked {
+    background-color: var(--dash-accent);
+    color: var(--dash-on-accent);
+  }
+}
+.admin-label {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--dash-muted);
+}
+
+.admin-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 3rem 1.5rem;
+  text-align: center;
+  color: var(--dash-muted);
+  font-size: 0.875rem;
+}
+.admin-empty .admin-empty-icon { font-size: 1.75rem; opacity: 0.6; }
+
+.admin-skeleton {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.5rem;
+  background: var(--dash-skeleton);
+}
+.admin-skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, var(--dash-skeleton-sheen), transparent);
+  animation: admin-shimmer 1.6s infinite;
+}
+@keyframes admin-shimmer {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(100%); }
+}
+
+.admin-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: var(--dash-overlay);
+  backdrop-filter: blur(6px);
+}
+.admin-modal {
+  width: 100%;
+  max-width: 34rem;
+  max-height: 88vh;
+  overflow-y: auto;
+  border-radius: 1rem;
+  border: 1px solid var(--dash-border);
+  background: var(--dash-modal-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: var(--dash-float-shadow);
+}
+
+.admin-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.9rem 1rem;
+  border-top: 1px solid var(--dash-border);
+  font-size: 0.8125rem;
+  color: var(--dash-muted);
+}
+
+/* Shared components rendered inside the admin shell (ConfirmDialog, the
+   vendor reject modal) are built on site-theme tokens. Remap the pieces that
+   would otherwise pair a site surface with admin text so they follow the
+   admin theme instead. Scoped to .admin-shell, theme-aware via tokens. */
+.admin-shell .payment-modal-container {
+  background: var(--dash-modal-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-color: var(--dash-border-strong);
+  color: var(--dash-text);
+  --danger-soft: var(--dash-danger-soft);
+  --danger-ink: var(--dash-danger-ink);
+  --success-soft: var(--dash-success-soft);
+  --success-ink: var(--dash-success-ink);
+}
+.admin-shell .payment-modal-container .text-muted { color: var(--dash-muted); }
+.admin-shell .btn-outline { color: var(--dash-text); border-color: var(--dash-border-strong); }
+.admin-shell .btn-outline:hover { border-color: var(--dash-accent-border); }
+.admin-shell .btn-ghost { color: var(--dash-text); }
+.admin-shell .btn-ghost:hover { background: var(--dash-hover); }
+.admin-shell .btn-primary { background: var(--dash-accent); color: var(--dash-on-accent); }
+.admin-shell .btn-primary:hover { background: var(--dash-accent-hover); box-shadow: 0 8px 24px var(--dash-glow); }
+.admin-shell .btn-danger { color: var(--dash-danger-ink); background: var(--dash-danger-soft); border-color: color-mix(in srgb, var(--dash-danger-ink) 30%, transparent); }
+
+/* Theme-aware scrollbars + focus ring inside the admin shell */
+.admin-shell ::-webkit-scrollbar { width: 8px; height: 8px; }
+.admin-shell ::-webkit-scrollbar-track { background: transparent; }
+.admin-shell ::-webkit-scrollbar-thumb { background: var(--dash-scrollbar); border-radius: 999px; }
+.admin-shell ::-webkit-scrollbar-thumb:hover { background: var(--dash-scrollbar-hover); }
+/* Focus indicators, shaped to the control:
+   - Form fields draw focus with the accent border + soft ring painted by
+     box-shadow (.admin-input/.admin-select/.input-field above) — box-shadow
+     follows the border-radius exactly, so the focus effect can never stick
+     out as a square. Keyboard focus stays clearly visible via the accent
+     border + rounded ring.
+   - Links, buttons and tabindexed elements get the same treatment: a
+     rounded ring painted by box-shadow (dash-ring) instead of the
+     browser's rectangular outline halo. */
+.admin-shell input:focus-visible,
+.admin-shell select:focus-visible,
+.admin-shell textarea:focus-visible {
+  outline: none;
+}
+.admin-shell :where(a, button, [tabindex]):focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--dash-ring);
+}
+
+/* ─── User Atelier Dashboard ─── */
+.user-dash-shell {
+  --atelier-bg: #f4f1ea;
+  --atelier-card: #fffcf7;
+  --atelier-ink: #1a1814;
+  --atelier-muted: #6d665c;
+  --atelier-accent: #2d6a5c;
+  --atelier-warm: #c4785a;
+  min-height: 100svh;
+  background: var(--atelier-bg);
+  color: var(--atelier-ink);
+}
+
+.user-dash-shell::before {
+  content: "";
+  position: fixed;
+  top: -20%;
+  right: -10%;
+  width: 60%;
+  height: 60%;
+  background: radial-gradient(circle, rgba(45, 106, 92, 0.08), transparent 60%);
+  pointer-events: none;
+}
+
+.atelier-card {
+  background: var(--atelier-card);
+  border: 1px solid color-mix(in srgb, var(--atelier-ink) 8%, transparent);
+  border-radius: 1.25rem;
+  box-shadow: 0 4px 24px rgba(26, 24, 20, 0.06);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.atelier-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(26, 24, 20, 0.1);
+}
+
+.atelier-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.7rem 1rem;
+  border-radius: 999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--atelier-muted);
+  transition: all 0.25s ease;
+}
+.atelier-nav-link:hover {
+  color: var(--atelier-ink);
+  background: color-mix(in srgb, var(--atelier-accent) 10%, transparent);
+}
+.atelier-nav-link.active {
+  color: white;
+  background: var(--atelier-accent);
+}
+
+@keyframes bar-grow {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+.bar-animate {
+  transform-origin: left;
+  animation: bar-grow 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Payment & Cards Styling */
+.payment-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(12, 12, 14, 0.4);
+  backdrop-filter: blur(8px);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.payment-modal-container {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 1.5rem;
+  width: 100%;
+  max-width: 520px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-lg);
+  animation: fade-up 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.credit-card-preview {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1.586;
+  border-radius: 1.25rem;
+  color: white;
+  overflow: hidden;
+  box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+}
+
+.credit-card-preview.flipped {
+  transform: rotateY(180deg);
+}
+
+.card-front, .card-back {
+  position: absolute;
+  inset: 0;
+  padding: 1.5rem;
+  backface-visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.card-front {
+  background: linear-gradient(135deg, #1e1e24 0%, #0c0c0e 100%);
+}
+
+.card-back {
+  background: linear-gradient(135deg, #0c0c0e 0%, #1e1e24 100%);
+  transform: rotateY(180deg);
+  justify-content: flex-start;
+  gap: 1.5rem;
+}
+
+.card-magnetic-strip {
+  height: 40px;
+  background: #000;
+  margin: 0.5rem -1.5rem 0;
+}
+
+.card-signature-box {
+  background: #f7f5f0;
+  color: #0c0c0e;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 0.75rem;
+  font-family: monospace;
+  font-weight: bold;
+  border-radius: 4px;
+}
+
+.card-glow {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+  opacity: 0.25;
+  pointer-events: none;
+}
+
+.card-glow-1 {
+  top: -75px;
+  right: -75px;
+}
+
+.card-glow-2 {
+  bottom: -75px;
+  left: -75px;
+}
+
+/* ─── Design tokens: status / semantic colors ───────────────────────────── */
+:root {
+  --success: #16a34a;
+  --success-soft: rgba(22, 163, 74, 0.12);
+  --success-ink: #166534;
+  --warning: #d97706;
+  --warning-soft: rgba(217, 119, 6, 0.12);
+  --warning-ink: #92400e;
+  --danger: #dc2626;
+  --danger-soft: rgba(220, 38, 38, 0.1);
+  --danger-ink: #991b1b;
+  --info: #2563eb;
+  --info-soft: rgba(37, 99, 235, 0.1);
+  --info-ink: #1e40af;
+  --ring: rgba(201, 169, 98, 0.55);
+}
+
+/* Visible keyboard focus everywhere — painted with box-shadow because
+   box-shadow follows each element's own border-radius in EVERY engine,
+   while outlines render as square halos (older engines ignore the radius
+   entirely, and offset outlines keep tight corners even in Chromium).
+   Form fields keep this ring too; their own classes layer a stronger,
+   matching focus state on top of it. */
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--ring);
+}
+
+/* ─── Navbar search pill ──────────────────────────────────────────────────
+   The pill container IS the field: it carries the hover/focus shape so the
+   effect always follows its rounded-full outline. The input inside is
+   transparent and never draws its own ring (the previous global input ring
+   rendered as a rectangle floating inside the pill). */
+.nav-search {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.nav-search:hover {
+  border-color: color-mix(in srgb, var(--accent) 40%, var(--border));
+}
+.nav-search:focus-within {
+  border-color: color-mix(in srgb, var(--accent) 60%, var(--border));
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 15%, transparent);
+}
+.nav-search input:focus-visible {
+  box-shadow: none;
+}
+
+/* ─── Footer newsletter (dark ink surface) ────────────────────────────────
+   The footer sits on the dark ink surface, so its controls get their own
+   treatment: the field brightens on hover, the button lifts, and focus
+   comes from the global pill-shaped box-shadow ring above. */
+.footer-field {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--bg);
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+.footer-field:hover:not(:focus) {
+  background: rgba(255, 255, 255, 0.17);
+}
+.footer-field::placeholder {
+  color: var(--bg);
+  opacity: 0.55;
+}
+.footer-btn {
+  transition: filter 0.2s ease, transform 0.2s ease;
+}
+.footer-btn:hover:not(:disabled) {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+}
+.footer-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+/* ─── Page transitions ─────────────────────────────────────────────────────── */
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page-anim {
+  /* fill: backwards, not both — a retained transform after the entrance
+     would anchor position:fixed dialogs to this block instead of the
+     viewport. Visually identical: the end keyframe is the natural state. */
+  animation: page-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+
+/* ─── Micro-interaction utilities ──────────────────────────────────────────── */
+.micro-press {
+  transition: transform 0.15s ease;
+}
+.micro-press:active {
+  transform: scale(0.96);
+}
+
+.hover-lift {
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease;
+}
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+.icon-nudge > svg,
+.icon-nudge > * + svg {
+  transition: transform 0.25s ease;
+}
+.icon-nudge:hover > svg,
+.icon-nudge:hover > * + svg {
+  transform: translateX(3px);
+}
+
+/* Slide-in underline for nav links */
+.nav-underline {
+  position: relative;
+}
+.nav-underline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  height: 2px;
+  width: 100%;
+  border-radius: 2px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.nav-underline:hover::after {
+  transform: scaleX(1);
+}
+
+/* ─── Buttons: small / ghost / danger variants ───────────────────────────── */
+.btn-sm {
+  padding: 0.45rem 1rem;
+  font-size: 0.8125rem;
+  border-radius: 999px;
+}
+.btn-lg {
+  padding: 0.875rem 1.75rem;
+  font-size: 0.9375rem;
+}
+
+.btn-ghost {
+  @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition-all duration-300;
+  background: transparent;
+  color: var(--ink);
+}
+.btn-ghost:hover {
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+}
+
+.btn-danger {
+  @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition-all duration-300;
+  background: var(--danger-soft);
+  color: var(--danger-ink);
+  border: 1px solid color-mix(in srgb, var(--danger) 30%, transparent);
+}
+.btn-danger:hover {
+  background: color-mix(in srgb, var(--danger) 22%, transparent);
+  transform: translateY(-1px);
+}
+
+/* ─── Status chips ─────────────────────────────────────────────────────────── */
+.status-chip {
+  @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold capitalize;
+}
+.status-chip::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: currentColor;
+  flex-shrink: 0;
+}
+.status-chip.success { background: var(--success-soft); color: var(--success-ink); }
+.status-chip.warning { background: var(--warning-soft); color: var(--warning-ink); }
+.status-chip.pending, .status-chip.processing { background: var(--info-soft); color: var(--info-ink); }
+.status-chip.danger, .status-chip.cancelled { background: var(--danger-soft); color: var(--danger-ink); }
+.status-chip.neutral { background: color-mix(in srgb, var(--muted) 14%, transparent); color: var(--ink); }
+
+/* ─── Data tables ─────────────────────────────────────────────────────────── */
+.data-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.875rem;
+}
+.data-table th {
+  text-align: left;
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+  color: var(--muted);
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+.data-table td {
+  padding: 0.9rem 1rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+.data-table tbody tr {
+  transition: background-color 0.2s ease;
+}
+.data-table tbody tr:hover {
+  background: color-mix(in srgb, var(--accent) 5%, transparent);
+}
+.data-table tbody tr:last-child td {
+  border-bottom: none;
+}
+.data-table-dark {
+  --border: var(--dash-border, rgba(255, 255, 255, 0.08));
+}
+
+/* ─── Toasts ──────────────────────────────────────────────────────────────── */
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: var(--surface-elevated);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  padding: 0.8rem 1rem;
+  box-shadow: var(--shadow-lg);
+  color: var(--ink);
+}
+.toast-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+.toast.success .toast-icon { background: var(--success-soft); color: var(--success-ink); }
+.toast.error .toast-icon   { background: var(--danger-soft); color: var(--danger-ink); }
+.toast.warning .toast-icon { background: var(--warning-soft); color: var(--warning-ink); }
+.toast.error { border-color: color-mix(in srgb, var(--danger) 35%, var(--border)); }
+.toast.success { border-color: color-mix(in srgb, var(--success) 30%, var(--border)); }
+
+/* ─── Modals / dialogs ────────────────────────────────────────────────────── */
+@keyframes overlay-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes modal-in {
+  from { opacity: 0; transform: translateY(14px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.payment-modal-overlay {
+  animation: overlay-in 0.25s ease both;
+}
+.payment-modal-container {
+  animation: modal-in 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ─── Demo access panel ───────────────────────────────────────────────────── */
+.demo-card {
+  position: relative;
+  border-radius: 1.25rem;
+  padding: 1px;
+  background: linear-gradient(130deg, color-mix(in srgb, var(--accent) 55%, transparent), transparent 40%, color-mix(in srgb, var(--teal) 45%, transparent));
+}
+.demo-card-inner {
+  position: relative;
+  border-radius: 1.2rem;
+  background: var(--surface-elevated);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  padding: 1.25rem 1.5rem;
+  overflow: hidden;
+}
+.demo-card-inner::before {
+  content: "";
+  position: absolute;
+  top: -40%;
+  right: -20%;
+  width: 220px;
+  height: 220px;
+  background: radial-gradient(circle, var(--glow), transparent 70%);
+  pointer-events: none;
+}
+.demo-cred-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  background: color-mix(in srgb, var(--accent) 7%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 18%, transparent);
+  border-radius: 0.75rem;
+  padding: 0.6rem 0.9rem;
+}
+.copy-btn {
+  @apply inline-flex items-center justify-center rounded-lg transition-all duration-200;
+  width: 2rem;
+  height: 2rem;
+  color: var(--muted);
+}
+.copy-btn:hover {
+  background: color-mix(in srgb, var(--accent) 18%, transparent);
+  color: var(--ink);
+}
+.copy-btn.copied {
+  color: var(--success-ink);
+  background: var(--success-soft);
+}
+
+@keyframes toast-slide-in {
+  from { opacity: 0; transform: translateY(16px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.toast {
+  animation: toast-slide-in 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* ─── Pointer cursor on all clickable elements ─── */
+button:not(:disabled),
+[role="button"]:not([aria-disabled="true"]),
+a[href],
+input[type="submit"],
+input[type="button"],
+select:not(:disabled),
+summary {
+  cursor: pointer;
+}
+
+button:disabled,
+input:disabled,
+select:disabled {
+  cursor: not-allowed;
+}
